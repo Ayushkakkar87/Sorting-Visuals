@@ -1,6 +1,6 @@
 # Sorting-Visuals
 
-The provided HTML document implements a sorting visualizer project using HTML, CSS, and JavaScript, along with the Bootstrap framework for styling. This interactive web page allows users to visualize the functioning of various sorting algorithms, including Bubble Sort, Insertion Sort, Selection Sort, Merge Sort, and Quick Sort.
+The provided HTML,CSS,BOOTSTRAP document implements a sorting visualizer project using HTML, CSS, and JavaScript, along with the Bootstrap framework for styling. This interactive web page allows users to visualize the functioning of various sorting algorithms, including Bubble Sort, Insertion Sort, Selection Sort, Merge Sort, and Quick Sort.
 
 Here's a breakdown of the key features:
 
