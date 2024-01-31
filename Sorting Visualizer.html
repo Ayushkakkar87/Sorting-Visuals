@@ -1,0 +1,214 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        #container {
+            display: flex;
+        }
+
+        .bar {
+            width: 20px;
+            margin: 0 2px;
+            background-color: #3498db;
+        }
+
+        button {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div id="container"></div>
+                <button class="btn btn-primary" onclick="resetArray()">Generate New Array</button>
+                <button class="btn btn-success" onclick="bubbleSort()">Bubble Sort</button>
+				<button class="btn btn-warning" onclick="insertionSort()">Insertion Sort</button>
+				<button class="btn btn-warning" onclick="selectionSort()">Selection Sort</button>
+				<button class="btn btn-info" onclick="mergeSort()">Merge Sort</button>
+				<button class="btn btn-danger" onclick="quickSort()">Quick Sort</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+    <script>
+        let array = [];
+
+        function generateArray() {
+            array = [];
+            for (let i = 0; i < 25; i++) {
+                array.push(Math.floor(Math.random() * 100) + 1);
+            }
+            renderArray();
+        }
+
+        function renderArray() {
+            const container = document.getElementById("container");
+            container.innerHTML = "";
+            for (let value of array) {
+                const bar = document.createElement("div");
+                bar.style.height = `${value * 4}px`;
+                bar.className = "bar";
+                container.appendChild(bar);
+            }
+        }
+
+        function swap(index1, index2) {
+            const temp = array[index1];
+            array[index1] = array[index2];
+            array[index2] = temp;
+        }
+
+        async function bubbleSort() {
+            for (let i = 0; i < array.length; i++) {
+                for (let j = 0; j < array.length - i - 1; j++) {
+                    if (array[j] > array[j + 1]) {
+                        swap(j, j + 1);
+                        renderArray();
+                        await new Promise(resolve =>
+                            setTimeout(resolve, 40)
+                        );
+                    }
+                }
+            }
+        }
+		
+		async function insertionSort() {
+        const n = array.length;
+        for (let i = 1; i < n; i++) {
+		
+            let key = array[i];
+            let j = i - 1;
+
+            while (j >= 0 && array[j] > key) {
+                array[j + 1] = array[j];
+                j--;
+
+                renderArray();
+                await new Promise(resolve => setTimeout(resolve, 40));
+            }
+
+            array[j + 1] = key;
+        }
+    }
+	
+	    async function selectionSort() {
+        const n = array.length;
+        for (let i = 0; i < n - 1; i++) {
+            let minIndex = i;
+            for (let j = i + 1; j < n; j++) {
+                if (array[j] < array[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            swap(i, minIndex);
+
+            renderArray();
+            await new Promise(resolve => setTimeout(resolve, 40));
+        }
+    }
+	
+	    async function mergeSort() {
+        async function merge(left, right) {
+            let result = [];
+            let i = 0;
+            let j = 0;
+
+            while (i < left.length && j < right.length) {
+                if (left[i] < right[j]) {
+                    result.push(left[i]);
+                    i++;
+                } else {
+                    result.push(right[j]);
+                    j++;
+                }
+            }
+
+            return result.concat(left.slice(i)).concat(right.slice(j));
+        }
+
+        async function mergeSortHelper(arr) {
+            const n = arr.length;
+            if (n <= 1) {
+                return arr;
+            }
+
+            const mid = Math.floor(n / 2);
+            const left = await mergeSortHelper(arr.slice(0, mid));
+            const right = await mergeSortHelper(arr.slice(mid));
+
+            const sortedArray = await merge(left, right);
+
+            array = sortedArray;
+            renderArray();
+            await new Promise(resolve => setTimeout(resolve, 50));
+
+            return sortedArray;
+        }
+
+        await mergeSortHelper(array);
+    }
+
+    async function quickSort() {
+        async function partition(low, high) {
+            let pivot = array[high];
+            let i = low - 1;
+
+            for (let j = low; j < high; j++) {
+                if (array[j] < pivot) {
+                    i++;
+                    swap(i, j);
+                    renderArray();
+                    await new Promise(resolve => setTimeout(resolve, 40));
+                }
+            }
+
+            swap(i + 1, high);
+            renderArray();
+            await new Promise(resolve => setTimeout(resolve, 40));
+
+            return i + 1;
+        }
+
+        async function quickSortHelper(low, high) {
+            if (low < high) {
+                let partitionIndex = await partition(low, high);
+                await quickSortHelper(low, partitionIndex - 1);
+                await quickSortHelper(partitionIndex + 1, high);
+            }
+        }
+
+        await quickSortHelper(0, array.length - 1);
+    }
+
+
+
+        function resetArray() {
+            generateArray();
+        }
+
+        generateArray();  // Initial array generation
+    </script>
+</body>
+</html>
